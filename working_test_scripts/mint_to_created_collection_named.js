@@ -1,4 +1,4 @@
-// RUN WHEN HAVE MORE POLKAMONEY
+// scripts/mint_named_nft.js
 require('dotenv').config();
 const { ethers } = require('ethers');
 const fs = require('fs');
@@ -35,6 +35,7 @@ async function main() {
   console.log("👤 minting with:", wallet.address);
   console.log("👑 hub owner:", await hub.owner());
 
+  // fetch the collection's parameters
   const col = await hub.getCollection(collectionId);
   const mintPriceWei = BigInt(col.mintPrice);
   console.log(`▶️ collection #${collectionId} mintPrice =`, ethers.formatEther(mintPriceWei), "WND");
@@ -43,6 +44,7 @@ async function main() {
   console.log("⛽ your WND balance:", ethers.formatEther(balance));
   if (balance < mintPriceWei) {
     console.warn("⚠️ Low balance—top up via faucet");
+    process.exit(1);
   }
 
   console.log(`🚀 mint(${collectionId}, "${to}", "${name}", "${uri}") → sending…`);

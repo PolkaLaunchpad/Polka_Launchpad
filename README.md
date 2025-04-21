@@ -1,3 +1,11 @@
+First Test Contract Deployed:
+0xc0933c5440c656464d1eb1f886422be3466b1459
+
+PolkaNFTFactory Deployed:
+0x959e85561b3cc2e2ae9e9764f55499525e350f56
+
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

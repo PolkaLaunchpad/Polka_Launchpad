@@ -8,7 +8,7 @@ const RPC_URL     = process.env.RPC_URL || 'https://westend-asset-hub-eth-rpc.po
 const CHAIN_ID    = 420420421;
 const PK          = process.env.PRIVATE_KEY;
 const CONTRACT    = '0xcc0927037e6b78cf9e9b647f34a1313252394860'; // Your PolkaTokenHub address
-const ABI_PATH    = './abi/PolkaTokenHub.json';
+const ABI_PATH    = 'PolkaTokenHub.json';
 
 async function main() {
   if (!PK) {

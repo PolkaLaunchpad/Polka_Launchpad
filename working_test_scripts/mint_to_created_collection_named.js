@@ -14,7 +14,7 @@ async function main() {
   const CHAIN_ID = 420420421;
   const PK       = process.env.PRIVATE_KEY;
   const CONTRACT = '0xa87fe90a07de4e10398f2203a9f3bd8b98cf902d';
-  const ABI_PATH = './abi/PolkaNFTHub3.json';
+  const ABI_PATH = '../src/lib/abi/PolkaNFTHub3.json';
 
   if (!PK) {
     console.error("⚠️  Set PRIVATE_KEY in your .env");

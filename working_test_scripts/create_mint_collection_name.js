@@ -8,7 +8,7 @@ async function main() {
   const CHAIN_ID    = 420420421;
   const PK          = process.env.PRIVATE_KEY;
   const HUB_ADDRESS = '0xa87fe90a07de4e10398f2203a9f3bd8b98cf902d';
-  const ABI_PATH    = './abi/PolkaNFTHub3.json';
+  const ABI_PATH    = '../src/lib/abi/PolkaNFTHub3.json';
 
   const MINT_PRICE_WND   = "0.01";
   const MAX_SUPPLY       = 100n;

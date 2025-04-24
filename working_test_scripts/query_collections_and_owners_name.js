@@ -7,7 +7,7 @@ const RPC_URL     = process.env.RPC_URL || 'https://westend-asset-hub-eth-rpc.po
 const CHAIN_ID    = 420420421;
 const PK          = process.env.PRIVATE_KEY;
 const CONTRACT    = '0xa87fe90a07de4e10398f2203a9f3bd8b98cf902d'; // Updated contract address
-const ABI_PATH    = './abi/PolkaNFTHub3.json'; // ABI for contract with named collections/NFTs
+const ABI_PATH    = 'PolkaNFTHub3.json'; // ABI for contract with named collections/NFTs
 
 async function main() {
   if (!PK) {

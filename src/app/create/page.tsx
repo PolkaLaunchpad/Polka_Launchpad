@@ -18,7 +18,7 @@ export default function CreatePage() {
               Create Token (ERC-20)
             </TabsTrigger>
             <TabsTrigger value="nft" className="text-sm">
-              Create NFT (ERC-721/1155)
+              Create NFT Collection
             </TabsTrigger>
           </TabsList>
           <TabsContent value="token">

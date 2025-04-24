@@ -1,10 +1,22 @@
-First Test Contract Deployed:
-0xc0933c5440c656464d1eb1f886422be3466b1459
+ERC-721: NFT and NFT Collection 'Minter' Contract:
+0xa87fe90a07de4e10398f2203a9f3bd8b98cf902d
 
-PolkaNFTFactory Deployed:
-0x959e85561b3cc2e2ae9e9764f55499525e350f56
+ERC-20: Coin 'Minter' Contract:
+0xcc0927037e6b78cf9e9b647f34a1313252394860
 
-
+TODO:
+ADD CREATE IMPLEMENTATIONS FOR:
+- ERC-20
+- NFT Collections
+- NFT [Where UI shows the user collections they have authority mint to]
+- Add purchase, sell, burn implementation into UI for Tokens and NFT's
+- Finish CLI for dev's to do all operations above + mass NFT mint from a CSV/JSON/TXT of IPFS Images & Metadata
+- Replace Placeholder token data with real:
+24h Volume
+Market Cap
+Displayed Price
+Price Chart
+Trading History
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 

@@ -5,12 +5,15 @@ ERC-20: Coin 'Minter' Contract:
 0xcc0927037e6b78cf9e9b647f34a1313252394860
 
 TODO:
+Move to Production Build and make further MVP advancements from there.
+
+Modify NFT contact to be compatible with IPFS metadata URL's containing images, and not strictly require IPFS image URL's.
+Allow NFT collections to be created with any ERC20 token as the purchasing currency.
 ADD CREATE IMPLEMENTATIONS FOR:
-- ERC-20
-- NFT Collections
 - NFT [Where UI shows the user collections they have authority mint to]
 - Add purchase, sell, burn implementation into UI for Tokens and NFT's
 - Finish CLI for dev's to do all operations above + mass NFT mint from a CSV/JSON/TXT of IPFS Images & Metadata
+- Add ability to pay for your token/collection to be 'featured'
 - Replace Placeholder token data with real:
 24h Volume
 Market Cap

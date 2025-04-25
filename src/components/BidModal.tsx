@@ -39,7 +39,7 @@ export default function BidModal({ item, onClose }: BidModalProps) {
 
     const currentBid = Number.parseFloat(item.currentBid)
     if (bid <= currentBid) {
-      setError(`Bid must be higher than the current bid (${currentBid} ETH)`)
+      setError(`Bid must be higher than the current bid (${currentBid} WND)`)
       return
     }
 
@@ -76,7 +76,7 @@ export default function BidModal({ item, onClose }: BidModalProps) {
           />
           <div>
             <h3 className="text-lg font-bold">{item.name}</h3>
-            <p className="text-sm text-gray-400">Current bid: {item.currentBid} ETH</p>
+            <p className="text-sm text-gray-400">Current bid: {item.currentBid} WND</p>
           </div>
         </div>
 
@@ -88,7 +88,7 @@ export default function BidModal({ item, onClose }: BidModalProps) {
           <form onSubmit={handleBidSubmit}>
             <div className="mb-4">
               <label htmlFor="bidAmount" className="block text-sm font-medium text-gray-300 mb-1">
-                Your Bid (ETH)
+                Your Bid (WND)
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

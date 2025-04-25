@@ -101,7 +101,7 @@ export async function placeBid(
 ): Promise<{ success: boolean; transactionHash: string }> {
   // In a real app, this would place a bid on a featured item
   // For now, we'll just return a mock implementation
-  console.log(`Placing bid on item ${itemId}: ${bidAmount} ETH`)
+  console.log(`Placing bid on item ${itemId}: ${bidAmount} WND`)
 
   // Mock implementation - in a real app, you would call the bidding contract
   return {

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import WalletConnector from "./WalletConnector"
-import { Sparkles, Coins, ImageIcon, Home, Menu, X } from "lucide-react"
+import { Sparkles, Coins, ImageIcon, Home, Menu, X, User } from "lucide-react"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -25,6 +25,7 @@ export default function Header() {
     { name: "Explore Tokens", path: "/explore", icon: <Coins className="w-4 h-4 mr-2" /> },
     { name: "NFT Market", path: "/nft-market", icon: <ImageIcon className="w-4 h-4 mr-2" /> },
     { name: "Create", path: "/create", icon: <Sparkles className="w-4 h-4 mr-2" /> },
+    { name: "My Creations", path: "/my-creations", icon: <User className="w-4 h-4 mr-2" /> },
   ]
 
   return (

@@ -1,31 +1,29 @@
 // src/components/NFTMinter.tsx
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import { ethers, BrowserProvider } from "ethers"
 import Web3Modal from "web3modal"
 import { Check, AlertCircle, Loader2 } from "lucide-react"
 import PolkaNFTHubABI from "@/lib/abi/PolkaNFTHub3.json"
 
-const HUB_ADDRESS =
-  process.env.NEXT_PUBLIC_NFT_HUB_ADDRESS ||
-  "0xa87fe90a07de4e10398f2203a9f3bd8b98cf902d"
+const HUB_ADDRESS = process.env.NEXT_PUBLIC_NFT_HUB_ADDRESS || "0xa87fe90a07de4e10398f2203a9f3bd8b98cf902d"
 
 export default function NFTMinter() {
   // form inputs
-  const [name, setName] = useState("")                    // COLLECTION_NAME
-  const [mintPrice, setMintPrice] = useState("0.01")       // MINT_PRICE_WND
-  const [maxSupply, setMaxSupply] = useState("100")        // MAX_SUPPLY
+  const [name, setName] = useState("") // COLLECTION_NAME
+  const [mintPrice, setMintPrice] = useState("0.01") // MINT_PRICE_WND
+  const [maxSupply, setMaxSupply] = useState("100") // MAX_SUPPLY
   const [royaltyReceiver, setRoyaltyReceiver] = useState("") // ROYALTY_RECEIVER
-  const [royaltyBP, setRoyaltyBP] = useState("250")        // ROYALTY_BP
+  const [royaltyBP, setRoyaltyBP] = useState("250") // ROYALTY_BP
 
   // wallet & UI state
   const [account, setAccount] = useState<string | null>(null)
   const [provider, setProvider] = useState<BrowserProvider | null>(null)
   const [web3Modal, setWeb3Modal] = useState<Web3Modal | null>(null)
-  const [walletMessage, setWalletMessage] = useState(
-    "Connect your wallet to create a collection"
-  )
+  const [walletMessage, setWalletMessage] = useState("Connect your wallet to create a collection")
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -92,34 +90,51 @@ export default function NFTMinter() {
       const hub = new ethers.Contract(HUB_ADDRESS, PolkaNFTHubABI, signer)
 
       // parse to the same types your script uses
-      const mintPriceWei = ethers.parseEther(mintPrice)         // parse 0.01 → Wei
-      const maxSupplyInt = ethers.parseUnits(maxSupply, 0)     // parse "100" → 100n
-      const royaltyBPInt  = parseInt(royaltyBP, 10)            // e.g. 250
+      const mintPriceWei = ethers.parseEther(mintPrice) // parse 0.01 → Wei
+      const maxSupplyInt = ethers.parseUnits(maxSupply, 0) // parse "100" → 100n
+      const royaltyBPInt = Number.parseInt(royaltyBP, 10) // e.g. 250
 
-      console.log("👤 createCollection with:", await signer.getAddress())
-      console.log("👑 hub owner:", await hub.owner())
-
+      console.log("👤 Creating collection with address:", await signer.getAddress())
       console.log(
-        `🚀 sending createCollection("${name}", ${mintPrice} WND, ${maxSupply}, ${royaltyReceiver}, ${royaltyBP})`
+        `🚀 Sending createCollection("${name}", ${mintPrice} WND, ${maxSupply}, ${royaltyReceiver}, ${royaltyBP})`,
       )
-      const tx = await hub.createCollection(
-        name,
-        mintPriceWei,
-        maxSupplyInt,
-        royaltyReceiver,
-        royaltyBPInt
-      )
+
+      // Send the transaction
+      const tx = await hub.createCollection(name, mintPriceWei, maxSupplyInt, royaltyReceiver, royaltyBPInt)
+
+      console.log("📝 Transaction sent:", tx.hash)
       setSuccess({ txHash: tx.hash })
 
+      // Wait for transaction confirmation
+      console.log("⏳ Waiting for confirmation...")
       const receipt = await tx.wait()
       console.log("✅ Included in block", receipt.blockNumber)
 
-      // pull the CollectionCreated event
-      const ev = receipt.events?.find((e) => e.event === "CollectionCreated")
-      if (ev?.args) {
+      // Extract collection ID from event logs
+      let collectionId = null
+      try {
+        // Parse logs to find the CollectionCreated event
+        for (const log of receipt.logs) {
+          try {
+            const parsedLog = hub.interface.parseLog(log)
+            if (parsedLog && parsedLog.name === "CollectionCreated") {
+              collectionId = parsedLog.args.collectionId.toString()
+              break
+            }
+          } catch (logError) {
+            // Skip logs that can't be parsed
+            continue
+          }
+        }
+      } catch (eventError) {
+        console.warn("⚠️ Error parsing event logs:", eventError)
+      }
+
+      if (collectionId) {
+        console.log("🎉 New collection ID =", collectionId)
         setSuccess({
           txHash: tx.hash,
-          collectionId: ev.args.collectionId.toString(),
+          collectionId,
         })
       } else {
         console.warn("⚠️ CollectionCreated event not found in logs")
@@ -170,26 +185,35 @@ export default function NFTMinter() {
               Collection ID: <strong>{success.collectionId}</strong>
             </p>
           )}
-          <button
-            onClick={() => {
-              setSuccess(null)
-              setName("")
-              setMintPrice("0.01")
-              setMaxSupply("100")
-              setRoyaltyBP("250")
-            }}
-            className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-2 rounded-lg text-sm font-medium"
-          >
-            Create Another
-          </button>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <button
+              onClick={() => {
+                setSuccess(null)
+                setName("")
+                setMintPrice("0.01")
+                setMaxSupply("100")
+                setRoyaltyBP("250")
+              }}
+              className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-2 rounded-lg text-sm font-medium"
+            >
+              Create Another
+            </button>
+
+            {success.collectionId && (
+              <a
+                href={`/my-creations/collection/${success.collectionId}`}
+                className="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200 border border-white/20"
+              >
+                Manage Collection
+              </a>
+            )}
+          </div>
         </div>
       ) : (
         // 3) The form
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Collection Name
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Collection Name</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -200,9 +224,7 @@ export default function NFTMinter() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Mint Price (WND)
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Mint Price (WND)</label>
             <input
               type="text"
               value={mintPrice}
@@ -214,9 +236,7 @@ export default function NFTMinter() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Max Supply
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Max Supply</label>
             <input
               type="number"
               min="1"
@@ -229,9 +249,7 @@ export default function NFTMinter() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Royalty Receiver
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Royalty Receiver</label>
             <input
               value={royaltyReceiver}
               onChange={(e) => setRoyaltyReceiver(e.target.value)}
@@ -242,9 +260,7 @@ export default function NFTMinter() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Royalty (bps)
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Royalty (bps)</label>
             <input
               type="number"
               min="0"
@@ -266,11 +282,7 @@ export default function NFTMinter() {
           )}
 
           <div className="flex justify-between items-center">
-            <button
-              type="button"
-              onClick={disconnectWallet}
-              className="text-sm text-gray-400 hover:underline"
-            >
+            <button type="button" onClick={disconnectWallet} className="text-sm text-gray-400 hover:underline">
               Disconnect Wallet
             </button>
             <button

@@ -221,7 +221,56 @@ npm run dev
 4. Click **Create Collection**  
 5. Confirm the transaction in your wallet
 
+## Results
 
+### NFT Contract:
+NFT Collection Creation:
+| Gas Fee (WND) |
+| ------------: |
+|         0.043 |
+|         0.043 |
+|         0.158 |
+|         0.158 |
+|         0.158 |
+Average: 0.112
+
+Minting to Collection:
+|       Gas Fee (WND) |
+| ------------------: |
+|              0.0742 |
+|              0.0742 |
+|               0.294 |
+|               0.296 |
+|               0.296 |
+|               0.296 |
+Average: 0.2217
+
+### Token Contract:
+Create Token:
+|       Gas Fee (WND) |
+| ------------------: |
+|              0.0572 |
+|              0.0572 |
+|              0.0338 |
+|              0.0338 |
+|              0.1500 |
+|              0.1500 |
+|              0.1500 |
+**Average:** 0.0903
+
+Mint/Burn Token:
+|       Gas Fee (WND) |
+| ------------------: |
+|              0.0213 |
+|              0.0237 |
+|              0.0237 |
+|              0.0213 |
+|              0.0813 |
+|              0.0843 |
+|              0.0843 |
+**Average:** 0.0486
+
+need to optimise then compare to same txn's using CREATE
 
 ## Lessons Learned & Best Practices
 
@@ -285,3 +334,33 @@ Price Chart
 Trading History
 
 Make marketplace more general? Not just for my specific contracts?
+
+
+ERC20 contract:
+0xcc0927037e6b78cf9e9b647f34a1313252394860
+
+ERC721 contract:
+0xa87fe90a07de4e10398f2203a9f3bd8b98cf902d
+
+# Development Experience
+
+We kind of felt like PolkaVM wasn’t “just another EVM” – we found ourselves often researching underlying mechanics, evaluating and sometimes rethinking traditional practises, a specific case being how we do things once we hit that existential‐deposit requirement and the odd CREATE2 behavior.
+
+ED headaches
+We thought having users pay WND up front for every little contract would be a drag, so we built a single “hub” that covers its own ED and then spawns tokens or collections on demand. We noticed it cut per-instance costs way down and made the front end feel a bit simpler.
+
+Salted deployments
+We discovered that the usual CREATE2 tricks didn’t behave the way we expected under Westend’s executor. Instead of wading through low-level assembly, we just leaned into the native
+
+```solidity
+new MyContract{ salt: … }(...)
+```
+syntax – which, oddly enough, felt more reliable once we got over the surprise.
+
+Toolchain quirks
+We grabbed Hardhat + Ethers.js for our main tests, bounced over to Remix for those “oh snap” moments, and hooked SubQuery + Cursor into a CI script to watch our on-chain stuff on Westend. We ran some quick scripts to gauge gas (around 0.03–0.11 WND per op) and then tweaked a few things based on what felt worth the effort.
+
+UX surprises
+We thought Web3Modal + Next.js + Ethers.js would cover us, but the real challenge was wrapping clear error messages around ED failures and smoothing out mint/burn flows so nobody has to do any math in their head.
+
+All told, we felt like we turned a bunch of PolkaVM quirks into… well, features? Or at least less painful hurdles. Building the hub pattern definitely taught us to work with PolkaVM’s oddities instead of fighting them.

@@ -47,7 +47,7 @@ export default function TokenCard({ token }: TokenCardProps) {
       >
         <div className="flex items-center mb-3">
           <div className="relative">
-            <img src={token.image || "/placeholder.svg"} alt={token.name} className="w-10 h-10 rounded-full" />
+            <img src={token.image || "/placeholder.svg"} alt="ALT" className="w-10 h-10 rounded-full" />
             <div className="absolute -bottom-1 -right-1 bg-black rounded-full p-0.5">
               <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
             </div>
